@@ -11,7 +11,7 @@
 #include<math.h>
 #include <windows.h>
 #include <conio.h>
-#include <ctype.h>   // isdigit()需要
+#include <ctype.h>
 #include<string>
 #include<time.h>
 
@@ -68,7 +68,7 @@ void inputPassword(char* pwd, int max_len) {
     printf("\n");
 }
 
-// 清空输入缓冲区（你原有代码中缺失，需补充）
+// 清空输入缓冲区
 void clearInputBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
@@ -486,7 +486,7 @@ void analyzeMyScore() {
     }
 }
 
-// 从文件加载所有学生数据到链表（核心修复函数）
+// 从文件加载所有学生数据到链表
 void loadStudentsToLinkList() {
     // 1. 先清空原有链表，避免重复加载
     Student* temp = stuListHead;
@@ -660,7 +660,6 @@ int changeTeacherPwd(char* inputId, char* oldPwd) {
                 printf("两次密码不一致！\n");
                 return 0;
             }
-            // 修复fseek类型警告：显式转换为long
             fseek(fp, -(long)sizeof(Teacher), SEEK_CUR);
             strcpy(tea.password, newPwd1);
             fwrite(&tea, sizeof(Teacher), 1, fp);
@@ -1121,9 +1120,6 @@ void teacherDownloadStudentInfo() {
     fclose(fp);
     if (count == 0) {
         printf("你管理的班级（%s）暂无学生数据，已创建空文件：%s\n", loginTeacherClass, filename);
-        // 可选：删除空文件
-        // remove(filename);
-        // printf("你管理的班级（%s）暂无学生数据，未创建文件\n", loginTeacherClass);
     }
     else {
         printf("下载成功！共导出 %d 名学生信息\n", count);
@@ -1161,7 +1157,6 @@ int adminLogin(char* inputId, char* inputPwd) {
     return 0;
 }
 // 管理员账号注册：返回1成功，0失败（账号已存在），-1文件错误
-// 注：实际项目中管理员账号通常由超级管理员创建，此函数仅用于测试
 int adminRegister() {
     Admin newAdmin;
     FILE* fp;
@@ -1597,7 +1592,7 @@ void adminProcessPwdRequests() {
 
     fclose(fp);
 
-    // 清理已处理的申请（可选：将已审批的移出或标记）
+    // 清理已处理的申请
     printf("\n审批处理完成！\n");
 }
 
@@ -1821,7 +1816,7 @@ void adminDeleteAccount() {
     printf("删除成功！\n");
 }
 
-// 管理员修改账号信息（不包括密码，如需重置密码可单独处理）
+// 管理员修改账号信息
 void adminModifyAccount() {
     printf("\n请选择要修改的账号类型：\n");
     printf("1. 学生\n2. 教师\n3. 管理员\n请选择：");
@@ -2024,7 +2019,7 @@ void adminImportFromFile() {
     char line[256];
     int success = 0, fail = 0;
     while (fgets(line, sizeof(line), csv)) {
-        // 跳过空行和标题行（可选，这里简单处理，假设每行都是有效数据）
+        // 跳过空行和标题行
         if (line[0] == '\n' || line[0] == '#') continue;
         char* token;
         char* next_token = NULL;
@@ -2161,7 +2156,7 @@ void welcomeScreen() {
     cout << "*************************************************" << endl;
     cout << "**                                             **" << endl;
     cout << "**                  欢迎使用！                 **" << endl;
-    cout << "**               学生管理系统V1.0              **" << endl;
+    cout << "**               学生管理系统V3.0              **" << endl;
     cout << "**                                             **" << endl;
     cout << "**   1.学生登录   2.教师登录   3.管理员登录    **" << endl;
     cout << "**                                             **" << endl;
@@ -2246,7 +2241,6 @@ void managerMainscreen() {
     cout << "*************************************************" << endl;
 }
 
-// 新增：管理员待办子菜单
 void adminTodoScreen() {
     cout << "*************************************************" << endl;
     cout << "*************************************************" << endl;
@@ -2623,7 +2617,7 @@ m:
     scanf("%d", &opm);
     clearInputBuffer();
     switch (opm) {
-    case 1: // 查看待办 - 新增子菜单
+    case 1:
     mtodo:
         system("cls");
         adminTodoScreen();
