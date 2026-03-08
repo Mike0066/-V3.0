@@ -64,6 +64,7 @@ void inputPassword(char* pwd, int max_len) {
             printf("\a");
         }
     }
+    pwd[i] = '\0';
     printf("\n");
 }
 
@@ -186,7 +187,7 @@ int studentRegister() {
     char pwd1[PASSWORD_LEN], pwd2[PASSWORD_LEN];
     inputPassword(pwd1, PASSWORD_LEN);
     printf("请再次输入密码：");
-    inputPassword(pwd2, 20);
+    inputPassword(pwd2, PASSWORD_LEN);
     if (strcmp(pwd1, pwd2) != 0) {
         fclose(fp);
         printf("两次密码输入不一致！\n");
@@ -219,7 +220,7 @@ int changeStudentPwd(char* inputId, char* oldPwd) {
             printf("请输入新密码：");
             inputPassword(newPwd1, PASSWORD_LEN);
             printf("请再次输入新密码：");
-            inputPassword(newPwd2, 20);
+            inputPassword(newPwd2, PASSWORD_LEN);
             if (strcmp(newPwd1, newPwd2) != 0) {
                 fclose(fp);
                 printf("两次密码不一致！\n");
@@ -1824,7 +1825,7 @@ void adminModifyAccount() {
     printf("\n请选择要修改的账号类型：\n");
     printf("1. 学生\n2. 教师\n3. 管理员\n请选择：");
     int type; scanf("%d", &type); clearInputBuffer();
-    char id[20];
+    char id[MAX_ID_LEN];
     printf("请输入要修改的账号：");
     scanf("%s", id); clearInputBuffer();
     const char* role = type == 1 ? "student" : (type == 2 ? "teacher" : "admin");
@@ -2261,7 +2262,7 @@ void adminTodoScreen() {
 int main() {
     // ========== 所有变量在开头定义 ==========
     int op = 0, op1 = 0, op2 = 0, op3 = 0, ops = 0, opt = 0, opm = 0, opzscg = 0, optodo = 0;
-    char inID[20];
+    char inID[MAX_ID_LEN];
     char inpassWord[20];
     char ch;
 
