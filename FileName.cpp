@@ -1,5 +1,4 @@
-﻿
-//学生
+﻿//学生
 //王 123456 123456
 //老师
 //杨 123456 123456
@@ -38,20 +37,31 @@ void loadStudentsToLinkList();
 void inputPassword(char* pwd, int max_len) {
     int i = 0;
     char ch;
+    int overflow = 0;//溢出标记
     memset(pwd, 0, max_len);  // 清空密码数组
-    printf("请输入密码：");
+    printf("请输入密码：（最多%d位）", max_len - 1);
     while (1) {
         ch = _getch();  // 无回显获取按键
         if (ch == '\r' || ch == '\n') {  // 按回车结束输入
+            if (overflow) {
+                printf("\n警告：密码过长，已自动截断！\n");
+                Sleep(2000);
+
+            }
             break;
         }
         else if (ch == '\b' && i > 0) {  // 按退格键删除
             printf("\b \b");  // 删掉屏幕上的*
             i--;
+            overflow = 0;
         }
         else if (i < max_len - 1) {  // 正常输入字符
             pwd[i++] = ch;
             printf("%c", PWD_MASK);    // 显示*
+        }
+        else {
+            overflow = 1;  // 标记溢出
+            printf("\a");
         }
     }
     printf("\n");
@@ -173,8 +183,8 @@ int studentRegister() {
     newStu.rank = 0;
     newStu.next = NULL;
     // 3. 隐藏输入密码
-    char pwd1[20], pwd2[20];
-    inputPassword(pwd1, 20);
+    char pwd1[PASSWORD_LEN], pwd2[PASSWORD_LEN];
+    inputPassword(pwd1, PASSWORD_LEN);
     printf("请再次输入密码：");
     inputPassword(pwd2, 20);
     if (strcmp(pwd1, pwd2) != 0) {
@@ -205,9 +215,9 @@ int changeStudentPwd(char* inputId, char* oldPwd) {
     while (fread(&stu, sizeof(Student), 1, fp) == 1) {
         if (strcmp(stu.id, inputId) == 0 && strcmp(stu.password, oldPwd) == 0) {
             found = 1;
-            char newPwd1[20], newPwd2[20];
+            char newPwd1[PASSWORD_LEN], newPwd2[PASSWORD_LEN];
             printf("请输入新密码：");
-            inputPassword(newPwd1, 20);
+            inputPassword(newPwd1, PASSWORD_LEN);
             printf("请再次输入新密码：");
             inputPassword(newPwd2, 20);
             if (strcmp(newPwd1, newPwd2) != 0) {
@@ -605,10 +615,10 @@ int teacherRegister() {
     scanf(" %c", &newTea.sex);
 
     // 3. 隐藏输入密码（两次确认）
-    char pwd1[20], pwd2[20];
-    inputPassword(pwd1, 20);
+    char pwd1[PASSWORD_LEN], pwd2[PASSWORD_LEN];
+    inputPassword(pwd1, PASSWORD_LEN);
     printf("请再次输入密码：");
-    inputPassword(pwd2, 20);
+    inputPassword(pwd2, PASSWORD_LEN);
     if (strcmp(pwd1, pwd2) != 0) {
         fclose(fp);
         printf("两次密码输入不一致！\n");
@@ -638,11 +648,11 @@ int changeTeacherPwd(char* inputId, char* oldPwd) {
         if (strcmp(tea.id, inputId) == 0 && strcmp(tea.password, oldPwd) == 0) {
             found = 1;
             // 输入新密码
-            char newPwd1[20], newPwd2[20];
+            char newPwd1[PASSWORD_LEN], newPwd2[PASSWORD_LEN];
             printf("请输入新密码：");
-            inputPassword(newPwd1, 20);
+            inputPassword(newPwd1, PASSWORD_LEN);
             printf("请再次输入新密码：");
-            inputPassword(newPwd2, 20);
+            inputPassword(newPwd2, PASSWORD_LEN);
             if (strcmp(newPwd1, newPwd2) != 0) {
                 fclose(fp);
                 printf("两次密码不一致！\n");
@@ -1175,10 +1185,10 @@ int adminRegister() {
     scanf("%s", newAdmin.name);
 
     // 2. 隐藏输入密码（两次确认）
-    char pwd1[20], pwd2[20];
-    inputPassword(pwd1, 20);
+    char pwd1[PASSWORD_LEN], pwd2[PASSWORD_LEN];
+    inputPassword(pwd1, PASSWORD_LEN);
     printf("请再次输入密码：");
-    inputPassword(pwd2, 20);
+    inputPassword(pwd2, PASSWORD_LEN);
     if (strcmp(pwd1, pwd2) != 0) {
         fclose(fp);
         printf("两次密码输入不一致！\n");
@@ -1205,11 +1215,11 @@ int changeAdminPwd(char* inputId, char* oldPwd) {
         if (strcmp(admin.id, inputId) == 0 && strcmp(admin.password, oldPwd) == 0) {
             found = 1;
             // 输入新密码
-            char newPwd1[20], newPwd2[20];
+            char newPwd1[PASSWORD_LEN], newPwd2[PASSWORD_LEN];
             printf("请输入新密码：");
-            inputPassword(newPwd1, 20);
+            inputPassword(newPwd1, PASSWORD_LEN);
             printf("请再次输入新密码：");
-            inputPassword(newPwd2, 20);
+            inputPassword(newPwd2, PASSWORD_LEN);
             if (strcmp(newPwd1, newPwd2) != 0) {
                 fclose(fp);
                 printf("两次密码不一致！\n");
@@ -1677,7 +1687,7 @@ void adminAddAccount() {
     printf("1. 学生\n2. 教师\n3. 管理员\n请选择：");
     int type; scanf("%d", &type); clearInputBuffer();
 
-    char id[20];
+    char id[MAX_ID_LEN];
     printf("请输入账号（学号/工号）：");
     scanf("%s", id); clearInputBuffer();
 
@@ -1969,6 +1979,7 @@ void adminManageAccounts() {
     while (1) {
         system("cls");
         printf("*************************************************\n");
+        printf("*************************************************\n");
         printf("**           账号增删改查管理                  **\n");
         printf("**                                             **\n");
         printf("**         1. 增加账号                         **\n");
@@ -1977,6 +1988,7 @@ void adminManageAccounts() {
         printf("**         4. 查询账号                         **\n");
         printf("**         5. 返回上一级                       **\n");
         printf("**                                             **\n");
+        printf("*************************************************\n");
         printf("*************************************************\n");
         printf("请选择操作：");
         int op; scanf("%d", &op); clearInputBuffer();
