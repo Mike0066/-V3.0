@@ -70,7 +70,8 @@ void inputPassword(char* pwd, int max_len) {
 
 // 清空输入缓冲区（你原有代码中缺失，需补充）
 void clearInputBuffer() {
-    while (getchar() != '\n'); // 读取并丢弃缓冲区所有字符，直到回车
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
 }
 // 判断字符串是否为数字（用于学号/成绩验证）
 int isNumber(char* str) {
@@ -2260,10 +2261,9 @@ void adminTodoScreen() {
 }
 
 int main() {
-    // ========== 所有变量在开头定义 ==========
     int op = 0, op1 = 0, op2 = 0, op3 = 0, ops = 0, opt = 0, opm = 0, opzscg = 0, optodo = 0;
     char inID[MAX_ID_LEN];
-    char inpassWord[20];
+    char inpassWord[PASSWORD_LEN];
     char ch;
 
     // ========== 初始化 ==========
@@ -2272,21 +2272,24 @@ int main() {
     // ========== 主菜单 ==========
 first:
     welcomeScreen();
-    cout << "请输入您所需的操作：";
-    cin >> op;
+    printf("请输入您所需的操作：");
+    scanf("%d", &op);
+    clearInputBuffer();
     system("cls");
 
     switch (op) {
     case 1: // 学生端
     a:
         loginscreen();
-        cout << "请输入您所需的操作：";
-        cin >> op1;
+        printf("请输入您所需的操作：");
+        scanf("%d", &op1);
+        clearInputBuffer();
         switch (op1) {
         case 1: // 直接登录
-            cout << "请输入账号：";
-            cin >> inID;
-            inputPassword(inpassWord, 20);
+            printf("请输入账号：");
+            scanf("%s", inID);
+            clearInputBuffer();
+            inputPassword(inpassWord, PASSWORD_LEN);
             if (studentLogin(inID, inpassWord)) {
                 Sleep(2100);
                 system("cls");
@@ -2298,25 +2301,29 @@ first:
                 goto a;
             }
             break;
-        case 2: // 密码找回 - 提交申请
+        case 2: // 密码找回
             submitStudentPwdRequest();
-            Sleep(5000);
+            printf("\n按任意键继续...");
+            _getch();
             system("cls");
             goto a;
             break;
         case 3: // 密码修改
             printf("请输入学号：");
             scanf("%s", inID);
+            clearInputBuffer();
             printf("请输入原密码：");
-            inputPassword(inpassWord, 20);
+            inputPassword(inpassWord, PASSWORD_LEN);
             changeStudentPwd(inID, inpassWord);
-            Sleep(2100);
+            printf("\n按任意键继续...");
+            _getch();
             system("cls");
             goto a;
             break;
         case 4: // 密码注册
             studentRegister();
-            Sleep(2100);
+            printf("\n按任意键继续...");
+            _getch();
             system("cls");
             goto a;
             break;
@@ -2335,13 +2342,15 @@ first:
     case 2: // 教师端
     b:
         loginscreen();
-        cout << "请输入您所需的操作：";
-        cin >> op2;
+        printf("请输入您所需的操作：");
+        scanf("%d", &op2);
+        clearInputBuffer();
         switch (op2) {
         case 1: // 直接登录
-            cout << "请输入账号：";
-            cin >> inID;
-            inputPassword(inpassWord, 20);
+            printf("请输入账号：");
+            scanf("%s", inID);
+            clearInputBuffer();
+            inputPassword(inpassWord, PASSWORD_LEN);
             if (teacherLogin(inID, inpassWord)) {
                 Sleep(2100);
                 system("cls");
@@ -2353,25 +2362,29 @@ first:
                 goto b;
             }
             break;
-        case 2: // 密码找回 - 提交申请
+        case 2: // 密码找回
             submitTeacherPwdRequest();
-            Sleep(3000);
+            printf("\n按任意键继续...");
+            _getch();
             system("cls");
             goto b;
             break;
         case 3: // 密码修改
             printf("请输入工号：");
             scanf("%s", inID);
+            clearInputBuffer();
             printf("请输入原密码：");
-            inputPassword(inpassWord, 20);
+            inputPassword(inpassWord, PASSWORD_LEN);
             changeTeacherPwd(inID, inpassWord);
-            Sleep(2100);
+            printf("\n按任意键继续...");
+            _getch();
             system("cls");
             goto b;
             break;
         case 4: // 密码注册
             teacherRegister();
-            Sleep(2100);
+            printf("\n按任意键继续...");
+            _getch();
             system("cls");
             goto b;
             break;
@@ -2390,13 +2403,15 @@ first:
     case 3: // 管理员端
     c:
         loginscreen();
-        cout << "请输入您所需的操作：";
-        cin >> op3;
+        printf("请输入您所需的操作：");
+        scanf("%d", &op3);  
+        clearInputBuffer(); 
         switch (op3) {
         case 1: // 直接登录
-            cout << "请输入管理员工号：";
-            cin >> inID;
-            inputPassword(inpassWord, 20);
+            printf("请输入管理员工号：");
+            scanf("%s", inID); 
+            clearInputBuffer();
+            inputPassword(inpassWord, PASSWORD_LEN);
             if (adminLogin(inID, inpassWord)) {
                 Sleep(2100);
                 system("cls");
@@ -2408,7 +2423,7 @@ first:
                 goto c;
             }
             break;
-        case 2: // 密码找回 - 管理员不需要
+        case 2: // 密码找回
             printf("管理员账号请联系超级管理员重置密码！\n");
             Sleep(2000);
             system("cls");
@@ -2417,16 +2432,19 @@ first:
         case 3: // 密码修改
             printf("请输入工号：");
             scanf("%s", inID);
+            clearInputBuffer();
             printf("请输入原密码：");
-            inputPassword(inpassWord, 20);
+            inputPassword(inpassWord, PASSWORD_LEN);
             changeAdminPwd(inID, inpassWord);
-            Sleep(2100);
+            printf("\n按任意键继续...");
+            _getch();
             system("cls");
             goto c;
             break;
         case 4: // 密码注册
             adminRegister();
-            Sleep(2100);
+            printf("\n按任意键继续...");
+            _getch();
             system("cls");
             goto c;
             break;
@@ -2453,7 +2471,8 @@ first:
 s:
     studentMainscreen();
     cout << "请输入您所需的操作：";
-    cin >> ops;
+    scanf("%d", &ops);
+    clearInputBuffer();
     switch (ops) {
     case 1: // 查询个人成绩
         queryMyScore();
@@ -2498,14 +2517,16 @@ s:
 t:
     teacherMainscreen();
     cout << "请输入您所需的操作：";
-    cin >> opt;
+    scanf("%d", &opt);
+    clearInputBuffer();
     switch (opt) {
     case 1: // 增删改查学生信息
     t1:
         system("cls");
         teacherSonscreen();
         cout << "请输入您所需的操作：";
-        cin >> opzscg;
+        scanf("%d", &opzscg);
+        clearInputBuffer();
         switch (opzscg) {
         case 1:
             teacherAddStudent();
@@ -2599,14 +2620,16 @@ t:
 m:
     managerMainscreen();
     cout << "请输入您所需的操作：";
-    cin >> opm;
+    scanf("%d", &opm);
+    clearInputBuffer();
     switch (opm) {
     case 1: // 查看待办 - 新增子菜单
     mtodo:
         system("cls");
         adminTodoScreen();
         cout << "请输入您所需的操作：";
-        cin >> optodo;
+        scanf("%d", &optodo);
+        clearInputBuffer();
         switch (optodo) {
         case 1: // 查看统计信息
             adminViewDashboard();
